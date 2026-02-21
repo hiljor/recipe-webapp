@@ -2,9 +2,8 @@
 
 A web app for viewing recipes among friends/family. Built with React and Node.js.
 
-# Features:
+## Planned features:
 
-Planned:
 - User authentication
 - Friend management
 - Creating friend groups
