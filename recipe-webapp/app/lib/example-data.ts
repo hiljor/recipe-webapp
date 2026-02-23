@@ -107,13 +107,12 @@ const users = [
   }
 ]
 
-
 /**
  * An array of arrays where each nested array contains 
  * 1 or more sql statements which can be run in parallel.
  * These statements set up the user table.
  */
-const UserSeedingStrings = [
+const userSeedingStrings = [
   [`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`],
   [`
     CREATE TABLE IF NOT EXISTS users (
@@ -131,7 +130,7 @@ const UserSeedingStrings = [
  * 1 or more sql statements which can be run in parallel.
  * These statements set up the recipe table.
  */
-const RecipeSeedingStrings = [
+const recipeSeedingStrings = [
   [
     `CREATE TABLE IF NOT EXISTS "recipes" (
     "id" SERIAL PRIMARY KEY NOT NULL,
@@ -172,4 +171,4 @@ const RecipeSeedingStrings = [
     [`ALTER TABLE "steps" ADD FOREIGN KEY ("recipe_id") REFERENCES "recipes" ("id");`]
 ]
 
-export {recipes, users}
+export {recipes, users, recipeSeedingStrings, userSeedingStrings}
