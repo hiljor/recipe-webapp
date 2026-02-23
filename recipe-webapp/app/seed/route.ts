@@ -79,6 +79,8 @@ async function seedRecipes(){
       )
     })
   )
+
+  return insertedRecipes;
 }
 
 export async function GET() {
