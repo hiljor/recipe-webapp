@@ -7,60 +7,60 @@ datasource db {
   provider = "postgresql"
 }
 
-model ingredients {
+model ingredient {
   id                 Int                  @id @default(autoincrement())
   name               String               @unique
-  recipe_ingredients recipe_ingredients[]
+  recipeIngredient recipeIngredient[]
 }
 
-model recipe_ingredients {
-  recipe_id     Int
-  ingredient_id Int
+model recipeIngredient {
+  recipeId     Int
+  ingredientId Int
   quantity      Decimal     @db.Decimal(10, 4)
   unit          String?
   pos           Int
-  ingredients   ingredients @relation(fields: [ingredient_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  recipes       recipes     @relation(fields: [recipe_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  ingredient   ingredient @relation(fields: [ingredientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  recipe       recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
-  @@id([recipe_id, ingredient_id, pos])
+  @@id([recipeId, ingredientId, pos])
 }
 
-model recipes {
+model recipe {
   id                 Int                  @id @default(autoincrement())
   title              String
-  author_id          Int
-  image_url          String?
-  flavour_text       String?
+  authorId          Int
+  imageUrl          String?
+  flavourText       String?
   servings           Int
   added              DateTime             @db.Date
   updated            DateTime             @db.Date
-  recipe_ingredients recipe_ingredients[]
-  users              users                @relation(fields: [author_id], references: [pk], onDelete: NoAction, onUpdate: NoAction)
-  steps              steps[]
+  recipeIngredient recipeIngredient[]
+  user              user                @relation(fields: [authorId], references: [pk], onDelete: NoAction, onUpdate: NoAction)
+  step              step[]
   
-  @@index([author_id])
+  @@index([authorId])
 }
 
-model steps {
-  recipe_id Int
-  type      instruction_type
+model step {
+  recipeId Int
+  type      instructionType
   text      String
   pos       Int
-  recipes   recipes          @relation(fields: [recipe_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  recipe   recipe          @relation(fields: [recipeId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
-  @@id([recipe_id, pos])
+  @@id([recipeId, pos])
 }
 
-model users {
+model user {
   pk           Int       @id @default(autoincrement())
   id           String    @unique @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  display_name String    @db.VarChar(255)
+  displayName String    @db.VarChar(255)
   email        String    @unique
   password     String
-  recipes      recipes[]
+  recipe      recipe[]
 }
 
-enum instruction_type {
+enum instructionType {
   step
   tip
   note
