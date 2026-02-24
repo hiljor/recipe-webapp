@@ -3,95 +3,93 @@ import { text } from "stream/consumers";
 const recipes = [
   {
     title: 'Boiled Egg',
-    id: 1,
-    author_id: 'd6e15727-9fe1-4961-8c5b-ea44a9bd81aa',
+    author_id: 1,
+    servings: 1,
     added: '1960-06-15',
     updated: '2025-11-14',
-    servings: '1',
     ingredients: [
       {
-        name: 'egg', quantity: '1', unit: '', id: '1', pos: '1'
+        name: 'egg', quantity: 1, unit: '', pos: 1
       }
     ],
     steps: [
-      { type: 'instruction',
+      { type: 'step',
         text: 'Put egg(s) in a pot of cold water.',
-        pos: '1'
+        pos: 1
       },
-      { type: 'instruction',
+      { type: 'step',
         text: 'Place the pot on high heat on the stove.',
-        pos: '2'
+        pos: 2
       },
       {
-        type: 'instruction',
+        type: 'step',
         text: 'Once water is boiling, put heat on medium and set a timer for 6 minutes. This makes for a perfectly cooked hard-boiled egg.',
-        pos: '3'
+        pos: 3
       },
       { type: 'tip',
         text: 'If you would rather have a soft boiled egg, cook for 4 minutes.',
-        pos: '4'
+        pos: 4
       },
       {
-        type: 'instruction',
+        type: 'step',
         text: 'Pour the hot water out and add cold water to the pan. Wait 1 minute.',
-        pos: '5'
+        pos: 5
       },
       {
-        type: 'instruction',
+        type: 'step',
         text: 'Lightly tap the egg on a hard surface to crack the shell. Peel it off and enjoy your egg.',
-        pos: '6'
+        pos: 6
       }
     ]
   },
   {
     title: 'Simple Pasta',
-    id: '2',
-    author_id: 'd6e15727-9fe1-4961-8c5b-ea44a9bd81aa',
+    author_id: 1,
+    servings: 2,
     added: '1995-03-20',
     updated: '2025-11-14',
-    servings: '2',
     ingredients: [
       {
-        name: 'pasta', quantity: '200', unit: 'g', pos: '1', id: '2'
+        name: 'pasta', quantity: 200, unit: 'g', pos: 1
       },
       {
-        name: 'salt', quantity: '1.5', unit: 'tsp', pos: '2', id: '3'
+        name: 'salt', quantity: 1.5, unit: 'tsp', pos: 2
       },
       {
-        name: 'olive oil', quantity: '2', unit: 'tbsp', pos: '3', id: '4'
+        name: 'olive oil', quantity: 2, unit: 'tbsp', pos: 3
       },
       {
-        name: 'garlic', quantity: '2', unit: 'cloves', pos: '4', id: '5'
+        name: 'garlic', quantity: 2, unit: 'cloves', pos: 4
       }
     ],
     steps: [
-      { type: 'instruction',
+      { type: 'step',
         text: 'Fill a large pot with water and bring to a boil.',
-        pos: '1'
+        pos: 1
       },
-      { type: 'instruction',
+      { type: 'step',
         text: 'Add salt to the boiling water.',
-        pos: '2'
+        pos: 2
       },
-      { type: 'instruction',
+      { type: 'step',
         text: 'Add pasta and cook for 8-10 minutes until al dente.',
-        pos: '3'
+        pos: 3
       },
-      { type: 'instruction',
+      { type: 'step',
         text: 'Drain pasta and set aside.',
-        pos: '4'
+        pos: 4
       },
-      { type: 'instruction',
+      { type: 'step',
         text: 'Heat olive oil in a pan and cook minced garlic until fragrant.',
-        pos: '5'
+        pos: 5
       },
-      { type: 'instruction',
+      { type: 'step',
         text: 'Toss pasta with garlic oil and serve.',
-        pos: '6'
+        pos: 6
       },
       { type: 'tip',
         text: 'Reserve some pasta water to add creaminess if needed.',
-        pos: '7'
+        pos: 7
       }
     ]
   }
@@ -112,12 +110,12 @@ const users = [
  * 1 or more sql statements which can be run in parallel.
  * These statements set up the user table.
  */
-const userSeedingStrings = [
+const userSeedingStatements = [
   [`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`],
   [`
     CREATE TABLE IF NOT EXISTS users (
       pk serial PRIMARY KEY NOT NULL,
-      id UUID DEFAULT UNIQUE uuid_generate_v4(),
+      id UUID UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
       display_name VARCHAR(255) NOT NULL,
       email TEXT NOT NULL UNIQUE,
       password TEXT NOT NULL
@@ -130,7 +128,16 @@ const userSeedingStrings = [
  * 1 or more sql statements which can be run in parallel.
  * These statements set up the recipe table.
  */
-const recipeSeedingStrings = [
+const recipeSeedingStatements = [
+  [`DO $$
+    BEGIN
+      IF NOT EXISTS (
+        SELECT 1 FROM pg_type WHERE typname = 'instruction_type'
+      ) THEN
+        CREATE TYPE instruction_type AS ENUM ('step', 'tip', 'note');
+      END IF;
+    END$$;`
+  ],
   [
     `CREATE TABLE IF NOT EXISTS "recipes" (
     "id" SERIAL PRIMARY KEY NOT NULL,
@@ -165,10 +172,16 @@ const recipeSeedingStrings = [
     PRIMARY KEY ("recipe_id", "pos")
     );
     `],
-    [`ALTER TABLE "recipes" ADD FOREIGN KEY ("author_id") REFERENCES "users" ("id");`],
-    [`ALTER TABLE "recipe_ingredients" ADD FOREIGN KEY ("recipe_id") REFERENCES "recipes" ("id");`],
+    [`ALTER TABLE "recipes" ADD FOREIGN KEY ("author_id") REFERENCES "users" ("pk");`],
+    [`ALTER TABLE "recipe_ingredients" ADD FOREIGN KEY ("recipe_id") REFERENCES "recipes" ("id") ON DELETE CASCADE;`],
     [`ALTER TABLE "recipe_ingredients" ADD FOREIGN KEY ("ingredient_id") REFERENCES "ingredients" ("id");`],
-    [`ALTER TABLE "steps" ADD FOREIGN KEY ("recipe_id") REFERENCES "recipes" ("id");`]
+    [`ALTER TABLE "steps" ADD FOREIGN KEY ("recipe_id") REFERENCES "recipes" ("id") ON DELETE CASCADE;`]
 ]
 
-export {recipes, users, recipeSeedingStrings, userSeedingStrings}
+const resetStatements = [
+  [`DROP TABLE IF EXISTS steps, recipe_ingredients, ingredients, recipes, users CASCADE;`],
+  [`DROP TYPE IF EXISTS instruction_type CASCADE;`],
+  [`DROP EXTENSION IF EXISTS "uuid-ossp";`]
+]
+
+export {recipes, users, recipeSeedingStatements, userSeedingStatements, resetStatements}
