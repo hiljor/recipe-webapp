@@ -5,10 +5,94 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../app/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/**
+ * Users table
+ */
+model User {
+  pk           Int       @id @default(autoincrement())
+  id           String    @unique @default(uuid())
+  display_name String
+  email        String    @unique
+  password     String
+
+  // Relation fields
+  recipes Recipe[]
+}
+
+/**
+ * Recipes table
+ */
+model Recipe {
+  id          Int       @id @default(autoincrement())
+  title       String
+  authorId    String    @map("author_id") // maps to column name
+  servings    Int
+  added       DateTime
+  updated     DateTime
+
+  // Relations
+  author      User      @relation(fields: [authorId], references: [id])
+  ingredients RecipeIngredient[]
+  steps       Step[]
+
+  @@index([authorId])
+}
+
+/**
+ * Ingredients table – unique name
+ */
+model Ingredient {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  recipes RecipeIngredient[]
+}
+
+/**
+ * Join table for many‑to‑many recipe ↔ ingredient
+ */
+model RecipeIngredient {
+  recipeId     Int
+  ingredientId Int
+  quantity     Decimal   @db.Numeric(10, 4)
+  unit         String?
+  pos          Int
+
+  // Composite primary key
+  @@id([recipeId, ingredientId, pos])
+
+  // Relations
+  recipe     Recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  ingredient Ingredient @relation(fields: [ingredientId], references: [id])
+}
+
+/**
+ * Steps (or tips/notes) belonging to a recipe
+ */
+model Step {
+  recipeId Int
+  type     InstructionType
+  text     String
+  pos      Int
+
+  @@id([recipeId, pos])
+
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+}
+
+/**
+ * Enum describing instruction types
+ */
+enum InstructionType {
+  step
+  tip
+  note
 }
