@@ -1,6 +1,4 @@
-import postgres from 'postgres';
 import bcrypt from 'bcrypt';
-import { recipes, users, recipeSeedingStatements, userSeedingStatements, resetStatements } from '../lib/example-data';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
