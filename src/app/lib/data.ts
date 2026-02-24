@@ -1,9 +1,17 @@
+import postgres from 'postgres';
+import bcrypt from 'bcrypt';
+import { recipes, users, recipeSeedingStatements, userSeedingStatements, resetStatements } from '../lib/example-data';
+
+const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
+
 /**
  * Fetches all recipes from the server.
  * @returns List of recipes
  */
 export async function fetchRecipes() {
-  // TODO
+  const result = sql`
+  
+  `
   return;
 }
 
