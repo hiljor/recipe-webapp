@@ -89,3 +89,5 @@ async function getAllRecipes(): Promise<RecipeDTO[]> {
 
   return recipes.map(mapToRecipeDTO);
 }
+
+export {getUserbyPk, getRecipeById, getAllRecipes}
