@@ -6,7 +6,7 @@ export interface RecipeDTO {
   servings: number;
   imageUrl?: string | null;
   authorName?: string | null;
-  added: string; // keep as ISO string for the client
+  added: string; 
   updated: string;
   ingredients: Ingredient[];
   steps: Step[];
