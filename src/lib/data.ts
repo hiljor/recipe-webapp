@@ -1,5 +1,31 @@
-// This file defines server actions
+import { prisma } from "../prisma/connection";
 
-async function getUser(name: string | number) {
-  // implementation goes here
+/**
+ * Gets a user by their integer ID or hidden string ID.
+ * @param name
+ * @returns The user, or null
+ */
+async function getUserbyPk(i: number) {
+  return prisma.user.findUnique({
+    where: { pk: i },
+  });
+}
+
+/**
+ * Gets a recipe by its integer ID.
+ * @param id
+ * @returns The recipe, or null
+ */
+async function getRecipeById(i: number) {
+  return prisma.recipe.findUnique({
+    where: { id: i },
+  });
+}
+
+/**
+ * 
+ * @returns All recipes in database
+ */
+async function getAllRecipes() {
+  return prisma.recipe.findMany();
 }
