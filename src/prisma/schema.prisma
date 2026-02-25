@@ -13,25 +13,25 @@ datasource db {
   provider = "postgresql"
 }
 
-model ingredient {
+model Ingredient {
   id                 Int                  @id @default(autoincrement())
   name               String               @unique
-  recipeIngredient recipeIngredient[]
+  RecipeIngredient RecipeIngredient[]
 }
 
-model recipeIngredient {
+model RecipeIngredient {
   recipeId     Int
   ingredientId Int
   quantity      Decimal     @db.Decimal(10, 4)
   unit          String?
   pos           Int
-  ingredient   ingredient @relation(fields: [ingredientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  recipe       recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  Ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Recipe       Recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@id([recipeId, ingredientId, pos])
 }
 
-model recipe {
+model Recipe {
   id                 Int                  @id @default(autoincrement())
   title              String
   authorId          Int
@@ -40,33 +40,33 @@ model recipe {
   servings           Int
   added              DateTime             @db.Date
   updated            DateTime             @db.Date
-  recipeIngredient recipeIngredient[]
-  user              user                @relation(fields: [authorId], references: [pk], onDelete: NoAction, onUpdate: NoAction)
+  RecipeIngredient RecipeIngredient[]
+  User              User                @relation(fields: [authorId], references: [pk], onDelete: NoAction, onUpdate: NoAction)
   step              step[]
   
   @@index([authorId])
 }
 
-model step {
+model Step {
   recipeId Int
   type      instructionType
   text      String
   pos       Int
-  recipe   recipe          @relation(fields: [recipeId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  Recipe   Recipe          @relation(fields: [recipeId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@id([recipeId, pos])
 }
 
-model user {
+model User {
   pk           Int       @id @default(autoincrement())
   id           String    @unique @default(dbgenerated("gen_random_uuid()"))
   displayName String    @db.VarChar(255)
   email        String    @unique
   password     String
-  recipe      recipe[]
+  Recipe      Recipe[]
 }
 
-enum instructionType {
+enum InstructionType {
   step
   tip
   note
