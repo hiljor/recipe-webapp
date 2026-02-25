@@ -1,22 +1,24 @@
 
 export interface RecipeDTO {
-  id: string;
+  id: number;
   title: string;
-  description: string;
+  flavourText: string | null;
+  servings: number;
   imageUrl?: string | null;
   authorName?: string | null;
-  createdAt: string; // keep as ISO string for the client
-  ingredients: Ingredient[],
-  steps: Step[]
+  added: string; // keep as ISO string for the client
+  updated: string;
+  ingredients: Ingredient[];
+  steps: Step[];
 }
 
 export interface Ingredient {
   name: string,
   quantity: number,
-  unit: string
+  unit: string,
 }
 
 export interface Step {
   type: string,
-  text: string
+  text: string,
 }
