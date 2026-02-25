@@ -1,6 +1,6 @@
 # Recipe web app
 
-A web app for viewing recipes among friends/family. Built with React and Node.js.
+A web app for viewing recipes among friends/family. Built with Nextjs, Prisma and Vercel.
 
 ## Planned features:
 
