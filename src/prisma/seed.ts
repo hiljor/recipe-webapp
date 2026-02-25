@@ -11,7 +11,7 @@ const prisma = new PrismaClient({
   adapter,
 });
 
-const userData: Prisma.userCreateInput[] = [
+const userData: Prisma.UserCreateInput[] = [
   {
     id: "d6e15727-9fe1-4961-8c5b-ea44a9bd81aa",
     displayName: "yummyfood",
@@ -20,7 +20,7 @@ const userData: Prisma.userCreateInput[] = [
   },
 ];
 
-const recipeData: Prisma.recipeCreateInput[] = [
+const recipeData: Prisma.RecipeCreateInput[] = [
   {
     title: "Boiled Egg",
     user: {
