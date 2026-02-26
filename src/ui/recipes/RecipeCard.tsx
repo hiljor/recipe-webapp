@@ -5,7 +5,7 @@ import Link from "next/link";
 export function RecipeCard({ recipe }: { recipe: RecipeDTO }) {
   return (
     <div className="mt-4">
-      <Link href={`/recipe/${recipe.id}`}>
+      <Link href={`/recipes/${recipe.id}`}>
         <h1 className="text-4xl text-black font-bold">{recipe.title}</h1>
       </Link>
       <div className="mt-2 text-m text-gray-600 flex items-center space-x-4">
