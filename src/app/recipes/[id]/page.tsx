@@ -14,7 +14,7 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
   }
 
   return (
-    <div className="flex-y p-8 gap-3">
+    <div className="flex flex-col p-8 gap-5">
       < RecipeHeader recipe={recipe} />
       < RecipeIngredients ingredients={recipe.ingredients} />
     </div>
