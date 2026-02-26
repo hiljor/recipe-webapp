@@ -10,7 +10,7 @@ export default function RecipeHeader({ recipe }: { recipe: RecipeDTO }) {
           {recipe.title}
         </h2>
         {recipe.flavourText && (
-          <p className="mt-2 text-lg text-gray-600 italic leading-relaxed">
+          <p className="mt-2 text-md text-gray-600 italic leading-relaxed">
             "{recipe.flavourText}"
           </p>
         )}
