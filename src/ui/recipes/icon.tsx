@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { ImageOff, Utensils } from "lucide-react"; // Eller ditt eget SVG-ikon
 import { useState } from "react";
@@ -6,15 +6,22 @@ import { useState } from "react";
 export default function RecipeIcon({
   src,
   alt = "Recipe icon",
+  size = "lg",
 }: {
-  src: string | null | undefined;
+  src?: string | null | undefined;
   alt?: string;
+  size?: "sm" | "lg";
 }) {
   const [imageError, setImageError] = useState(false);
 
-  const containerStyle =
-    "flex-shrink-0 w-48 h-48 flex items-center justify-center bg-gray-100 rounded-lg border border-gray-200 overflow-hidden";
-  const iconStyle = "w-12 h-12 text-gray-400";
+  const iconSize = size === "sm" ? "w-12 h-12" : "w-24 h-24";
+  const iconStyle = `${iconSize} text-gray-400`;
+  
+  const containerClasses =
+    size === "sm" ? "w-24 h-24 rounded-md" : "w-48 h-48 rounded-lg";
+
+  const containerStyle = `flex-shrink-0 flex items-center justify-center bg-gray-100 border border-gray-200 overflow-hidden ${containerClasses}`;
+
   if (!src || imageError) {
     return (
       <div className={containerStyle}>

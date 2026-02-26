@@ -6,7 +6,7 @@ import RecipeIcon from "./icon";
 export function RecipeCard({ recipe }: { recipe: RecipeDTO }) {
   return (
     <div className="flex gap-6">
-      <RecipeIcon src={recipe.imageUrl}/>
+      <RecipeIcon src={recipe.imageUrl} size="sm"/>
       <div className="mt-4">
         <Link href={`/recipes/${recipe.id}`}>
           <h1 className="text-4xl text-black font-bold">{recipe.title}</h1>
