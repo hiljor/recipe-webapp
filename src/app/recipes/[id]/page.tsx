@@ -1,5 +1,6 @@
 import { getRecipeById } from "@/lib/data";
-import RecipeHeader from "@/ui/recipes/Header";
+import RecipeHeader from "@/ui/recipes/header";
+import RecipeIngredients from "@/ui/recipes/ingredients";
 import { notFound } from 'next/navigation';
 
 export default async function RecipePage({ params }: { params: Promise<{ id: string }> }) {
@@ -13,8 +14,9 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
   }
 
   return (
-    <div className="flex">
+    <div className="flex-y p-8 gap-3">
       < RecipeHeader recipe={recipe} />
+      < RecipeIngredients ingredients={recipe.ingredients} />
     </div>
   )
 }

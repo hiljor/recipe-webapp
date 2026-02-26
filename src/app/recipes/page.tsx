@@ -1,6 +1,6 @@
 import type { Recipe } from "@/app/generated/prisma/client";
 import { getAllRecipes } from "@/lib/data"
-import { RecipeCard } from "@/ui/recipes/RecipeCard"
+import { RecipeCard } from "@/ui/recipes/card"
 
 export default async function RecipesPage() {
   const recipes = await getAllRecipes();
