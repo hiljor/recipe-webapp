@@ -22,7 +22,7 @@ export default async function RecipePage({
     <div className="flex flex-col p-8 gap-5">
       <RecipeIcon />
       <RecipeHeader recipe={recipe} />
-      <div className="flex flex-row">
+      <div className="flex flex-row gap-6">
         <RecipeIngredients ingredients={recipe.ingredients} />
         <RecipeSteps steps={recipe.steps} />
       </div>
