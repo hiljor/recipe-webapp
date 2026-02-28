@@ -1,4 +1,3 @@
-import { Recipe } from "@/app/generated/prisma/client";
 import { RecipeDTO } from "@/lib/types";
 import Link from "next/link";
 import RecipeIcon from "./icon";
