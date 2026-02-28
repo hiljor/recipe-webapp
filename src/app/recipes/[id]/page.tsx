@@ -1,11 +1,15 @@
 import { getRecipeById } from "@/lib/data";
 import RecipeHeader from "@/ui/recipes/header";
+import RecipeIcon from "@/ui/recipes/icon";
 import RecipeIngredients from "@/ui/recipes/ingredients";
 import RecipeSteps from "@/ui/recipes/steps";
-import { notFound } from 'next/navigation';
+import { notFound } from "next/navigation";
 
-export default async function RecipePage({ params }: { params: Promise<{ id: string }> }) {
-
+export default async function RecipePage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
 
   const recipe = await getRecipeById(parseInt(id));
@@ -16,9 +20,12 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
 
   return (
     <div className="flex flex-col p-8 gap-5">
-      < RecipeHeader recipe={recipe} />
-      < RecipeIngredients ingredients={recipe.ingredients} />
-      < RecipeSteps steps={recipe.steps} />
+      <RecipeIcon />
+      <RecipeHeader recipe={recipe} />
+      <div className="flex flex-row">
+        <RecipeIngredients ingredients={recipe.ingredients} />
+        <RecipeSteps steps={recipe.steps} />
+      </div>
     </div>
-  )
+  );
 }
