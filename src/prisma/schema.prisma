@@ -7,6 +7,12 @@ datasource db {
   provider = "postgresql"
 }
 
+enum InstructionType {
+  step
+  tip
+  note
+}
+
 model Ingredient {
   id               Int                @id @default(autoincrement())
   name             String             @unique
@@ -113,10 +119,4 @@ model Verification {
   updatedAt  DateTime?
 
   @@map("verification")
-}
-
-enum InstructionType {
-  step
-  tip
-  note
 }
