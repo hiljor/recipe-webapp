@@ -1,6 +1,6 @@
 import { PrismaClient, Prisma } from "../app/generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
-import bcrypt from 'bcrypt';
+import bcrypt from "bcrypt";
 import "dotenv/config";
 
 const adapter = new PrismaPg({
@@ -11,20 +11,11 @@ const prisma = new PrismaClient({
   adapter,
 });
 
-const userData: Prisma.UserCreateInput[] = [
-  {
-    id: "d6e15727-9fe1-4961-8c5b-ea44a9bd81aa",
-    displayName: "yummyfood",
-    email: "yummyfood@gmail.com",
-    password: "1234nomnom",
-  },
-];
-
 const recipeData: Prisma.RecipeCreateInput[] = [
   {
     title: "Boiled Egg",
-    user: {
-      connect: { pk: 1 },
+    author: {
+      connect: { id: "re2PiN9vCC3WVIBKv4prhv5zcTvenNgw" },
     },
     servings: 1,
     added: new Date("1960-06-15"),
@@ -33,13 +24,13 @@ const recipeData: Prisma.RecipeCreateInput[] = [
       create: [
         {
           ingredient: {
-            create: { name: 'egg' }
+            create: { name: "egg" },
           },
           quantity: 1,
-          unit: '',
-          pos: 1
-        }
-      ]
+          unit: "",
+          pos: 1,
+        },
+      ],
     },
     step: {
       create: [
@@ -78,7 +69,9 @@ const recipeData: Prisma.RecipeCreateInput[] = [
   },
   {
     title: "Simple Pasta",
-    user: { connect: { pk: 1 } },
+    author: {
+      connect: { id: "re2PiN9vCC3WVIBKv4prhv5zcTvenNgw" },
+    },
 
     servings: 2,
     added: new Date("1995-03-20"),
@@ -87,30 +80,30 @@ const recipeData: Prisma.RecipeCreateInput[] = [
     recipeIngredient: {
       create: [
         {
-          ingredient: { create: { name: 'pasta' } },
+          ingredient: { create: { name: "pasta" } },
           quantity: 200,
-          unit: 'g',
-          pos: 1
+          unit: "g",
+          pos: 1,
         },
         {
-          ingredient: { create: { name: 'salt' } },
+          ingredient: { create: { name: "salt" } },
           quantity: 1.5,
-          unit: 'tsp',
-          pos: 2
+          unit: "tsp",
+          pos: 2,
         },
         {
-          ingredient: { create: { name: 'olive oil' } },
+          ingredient: { create: { name: "olive oil" } },
           quantity: 2,
-          unit: 'tbsp',
-          pos: 3
+          unit: "tbsp",
+          pos: 3,
         },
         {
-          ingredient: { create: { name: 'garlic' } },
+          ingredient: { create: { name: "garlic" } },
           quantity: 2,
-          unit: 'cloves',
-          pos: 4
-        }
-      ]
+          unit: "cloves",
+          pos: 4,
+        },
+      ],
     },
     step: {
       create: [
@@ -143,10 +136,6 @@ const recipeData: Prisma.RecipeCreateInput[] = [
 ];
 
 export async function main() {
-  for (var u of userData) {
-    u.password = await bcrypt.hash(u.password, 10);
-    await prisma.user.create({ data: u });
-  }
   for (const r of recipeData) {
     await prisma.recipe.create({ data: r });
   }
