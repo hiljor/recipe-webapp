@@ -51,7 +51,7 @@ export default function SignInPage() {
           className="w-full bg-white text-black font-medium rounded-md px-4 py-2 hover:bg-gray-200"
         >
           {" "}
-          // [!code ++] Sign In
+          Sign In
         </button>{" "}
       </form>{" "}
     </main>

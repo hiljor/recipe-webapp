@@ -1,9 +1,21 @@
-import Image from "next/image";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+import AuthComponents from "@/ui/auth/authComponents"
 
-export default function Home() {
+export default async function HomePage() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (session) {
+    redirect("/dashboard");
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans">
-
-    </div>
+    <main className="flex min-h-screen flex-col items-center justify-center">
+      <h1>Welcome to My App</h1>
+      <AuthComponents />
+    </main>
   );
 }
