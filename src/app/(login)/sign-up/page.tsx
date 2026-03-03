@@ -1,31 +1,31 @@
 "use client";
 
-import { useState } from "react"; 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-
 import { signUp } from "@/lib/auth-client";
 
 export default function SignUpPage() {
-  const router = useRouter(); 
-  const [error, setError] = useState<string | null>(null); 
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
+
     const formData = new FormData(e.currentTarget);
+
     const res = await signUp.email({
       name: formData.get("name") as string,
       email: formData.get("email") as string,
       password: formData.get("password") as string,
     });
+
     if (res.error) {
       setError(res.error.message || "Something went wrong.");
     } else {
       router.push("/dashboard");
     }
   }
-
-  const inputStyle = "w-full rounded-md bg-neutral-900 border border-neutral-700 px-3 py-2";
 
   return (
     <main className="max-w-md mx-auto p-6 space-y-4 text-white">
@@ -35,16 +35,16 @@ export default function SignUpPage() {
         {" "}
         <input
           name="name"
-          placeholder="The best chef ever"
+          placeholder="Full Name"
           required
-          className={inputStyle}
+          className="w-full rounded-md bg-neutral-900 border border-neutral-700 px-3 py-2"
         />{" "}
         <input
           name="email"
           type="email"
-          placeholder="foodmeister@yummy.chef"
+          placeholder="Email"
           required
-          className={inputStyle}
+          className="w-full rounded-md bg-neutral-900 border border-neutral-700 px-3 py-2"
         />{" "}
         <input
           name="password"
@@ -57,7 +57,10 @@ export default function SignUpPage() {
         <button
           type="submit"
           className="w-full bg-white text-black font-medium rounded-md px-4 py-2 hover:bg-gray-200"
-        />{" "}
+        >
+          {" "}
+          Create Account
+        </button>{" "}
       </form>{" "}
     </main>
   );
