@@ -8,7 +8,7 @@ import { User, Recipe, Ingredient, RecipeIngredient, Step } from "@/app/generate
  * @param name
  * @returns The user, or null
  */
-async function getUserbyPk(inputId: string): Promise<User | null> {
+async function getUserbyId(inputId: string): Promise<User | null> {
   return prisma.user.findUnique({
     where: { id: inputId },
   });
@@ -26,7 +26,7 @@ function mapToRecipeDTO(recipe: any): RecipeDTO {
     flavourText: recipe.flavourText,
     servings: recipe.servings,
     imageUrl: recipe.imageUrl,
-    authorName: recipe.user?.displayName ?? "Unkown chef",
+    authorName: recipe.author?.name ?? "Unkown chef",
     added: recipe.added.toISOString(),
     updated: recipe.updated.toISOString(),
     
@@ -53,7 +53,7 @@ async function getRecipeById(i: number): Promise<RecipeDTO | null> {
   const recipe = await prisma.recipe.findUnique({
     where: { id: i },
     include: {
-      user: true, // Henter User-modellen (for displayName)
+      author: true, 
       step: {
         orderBy: { pos: 'asc' }
       },
@@ -78,7 +78,7 @@ async function getRecipeById(i: number): Promise<RecipeDTO | null> {
 async function getAllRecipes(): Promise<RecipeDTO[]> {
   const recipes = await prisma.recipe.findMany({
     include: {
-      user: true,
+      author: true,
       step: { orderBy: { pos: 'asc' } },
       recipeIngredient: {
         include: { ingredient: true },
@@ -90,4 +90,4 @@ async function getAllRecipes(): Promise<RecipeDTO[]> {
   return recipes.map(mapToRecipeDTO);
 }
 
-export {getUserbyPk, getRecipeById, getAllRecipes}
+export {getUserbyId, getRecipeById, getAllRecipes}
