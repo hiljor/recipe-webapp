@@ -37,7 +37,7 @@ model RecipeIngredient {
 model Recipe {
   id               Int                @id @default(autoincrement())
   title            String
-  authorId         Int
+  authorId         String
   imageUrl         String?
   flavourText      String?
   servings         Int
@@ -45,6 +45,7 @@ model Recipe {
   updated          DateTime           @db.Date
   recipeIngredient RecipeIngredient[]
   step             Step[]
+  author           User               @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
   @@index([authorId])
   @@map("Recipe")
@@ -71,6 +72,7 @@ model User {
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
+  recipes       Recipe[]
 
   @@unique([email])
   @@map("user")

@@ -1,4 +1,4 @@
-import { prisma } from "../prisma/connection";
+import prisma from "../prisma/connection";
 import { RecipeDTO } from "./types";
 import { User, Recipe, Ingredient, RecipeIngredient, Step } from "@/app/generated/prisma/client";
 
@@ -8,9 +8,9 @@ import { User, Recipe, Ingredient, RecipeIngredient, Step } from "@/app/generate
  * @param name
  * @returns The user, or null
  */
-async function getUserbyPk(i: number): Promise<User | null> {
+async function getUserbyPk(inputId: string): Promise<User | null> {
   return prisma.user.findUnique({
-    where: { pk: i },
+    where: { id: inputId },
   });
 }
 
