@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import prisma from "@/lib/prisma"; // Ensure this path matches your project structure
+import prisma from "@/prisma/connection";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
