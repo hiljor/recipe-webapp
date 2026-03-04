@@ -35,11 +35,14 @@ model Recipe {
   imageUrl         String?
   flavourText      String?
   servings         Int
+  length           RecipeLength?
   added            DateTime           @db.Date
   updated          DateTime           @db.Date
   author           User               @relation(fields: [authorId], references: [id], onDelete: Cascade)
   recipeIngredient RecipeIngredient[]
   step             Step[]
+  tag              Tag[]
+  recipeTags       RecipeTag[]
 
   @@index([authorId])
   @@map("Recipe")
@@ -54,6 +57,25 @@ model Step {
 
   @@id([recipeId, pos])
   @@map("Step")
+}
+
+model Tag {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  recipe     Recipe?     @relation(fields: [recipeId], references: [id])
+  recipeId   Int?
+  recipeTags RecipeTag[]
+}
+
+model RecipeTag {
+  recipeId Int
+  tagId    Int
+  tag      Tag    @relation(fields: [tagId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  recipe   Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([recipeId, tagId])
+  @@map("recipeTag")
 }
 
 model User {
@@ -119,4 +141,11 @@ enum InstructionType {
   step
   tip
   note
+}
+
+enum RecipeLength {
+  UNDER_15
+  FROM_15_TO_30
+  FROM_30_TO_60
+  OVER_60
 }
