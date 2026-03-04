@@ -27,7 +27,7 @@ export default function DashboardPage() {
       <button
         onClick={() => signOut()}
         className="w-full bg-white text-black font-medium rounded-md px-4 py-2 hover:bg-gray-200"
-      ></button>
+      >Sign out</button>
     </main>
   );
 }
