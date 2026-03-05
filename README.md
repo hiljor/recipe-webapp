@@ -4,7 +4,6 @@ A web app for viewing recipes among friends/family. Built with Nextjs, Prisma an
 
 ## Planned features:
 
-- User authentication
 - Friend management
 - Creating friend groups
 - Recipe creation and editing
