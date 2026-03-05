@@ -25,6 +25,7 @@ function mapToRecipeDTO(recipe: any): RecipeDTO {
     title: recipe.title,
     flavourText: recipe.flavourText,
     servings: recipe.servings,
+    time: recipe.time,
     imageUrl: recipe.imageUrl,
     authorName: recipe.author?.name ?? "Unkown chef",
     added: recipe.added.toISOString(),
@@ -36,11 +37,12 @@ function mapToRecipeDTO(recipe: any): RecipeDTO {
       unit: ri.unit ?? "",
     })),
     
-    // Mapper steg
     steps: recipe.step.map((s: any) => ({
       type: s.type,
       text: s.text,
     })),
+
+    tags: recipe.recipeTag.map((rt: any) => rt.tag.name),
   };
 }
 
@@ -59,9 +61,14 @@ async function getRecipeById(i: number): Promise<RecipeDTO | null> {
       },
       recipeIngredient: {
         include: {
-          ingredient: true // Henter selve navnet fra Ingredient-modellen
+          ingredient: true
         },
         orderBy: { pos: 'asc' }
+      },
+      recipeTag: {
+        include: {
+          tag: true
+        }
       }
     }
   });
@@ -78,11 +85,20 @@ async function getRecipeById(i: number): Promise<RecipeDTO | null> {
 async function getAllRecipes(): Promise<RecipeDTO[]> {
   const recipes = await prisma.recipe.findMany({
     include: {
-      author: true,
-      step: { orderBy: { pos: 'asc' } },
-      recipeIngredient: {
-        include: { ingredient: true },
+      author: true, 
+      step: {
         orderBy: { pos: 'asc' }
+      },
+      recipeIngredient: {
+        include: {
+          ingredient: true
+        },
+        orderBy: { pos: 'asc' }
+      },
+      recipeTag: {
+        include: {
+          tag: true
+        }
       }
     }
   });
