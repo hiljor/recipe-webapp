@@ -1,4 +1,4 @@
-import { Step } from "@/lib/types";
+import { Step } from "@/lib/definitions";
 import { HelpCircle } from "lucide-react";
 
 export default function RecipeSteps({ steps }: { steps: Step[] }) {

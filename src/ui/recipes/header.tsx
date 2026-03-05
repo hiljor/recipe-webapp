@@ -1,4 +1,4 @@
-import { RecipeDTO } from "@/lib/types";
+import { RecipeDTO } from "@/lib/definitions";
 
 export default function RecipeHeader({ recipe }: { recipe: RecipeDTO }) {
   return (

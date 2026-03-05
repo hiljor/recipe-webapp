@@ -1,4 +1,4 @@
-import { RecipeDTO } from "@/lib/types";
+import { RecipeDTO } from "@/lib/definitions";
 import Link from "next/link";
 import RecipeIcon from "./icon";
 

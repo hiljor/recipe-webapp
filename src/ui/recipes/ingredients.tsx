@@ -1,4 +1,4 @@
-import { Ingredient } from "@/lib/types";
+import { Ingredient } from "@/lib/definitions";
 
 export default function RecipeIngredients({ingredients} : {ingredients: Ingredient[]}) {
   return (
