@@ -1,7 +1,7 @@
-import { Step } from "@/lib/definitions";
+import { StepDTO } from "@/lib/definitions";
 import { HelpCircle } from "lucide-react";
 
-export default function RecipeSteps({ steps }: { steps: Step[] }) {
+export default function RecipeSteps({ steps }: { steps: StepDTO[] }) {
   let currentStep = 0;
   const processedSteps = steps.map((step) => {
     const isTip = step.type === "tip";

@@ -7,14 +7,14 @@ export default function RecipeHeader({ recipe }: { recipe: RecipeDTO }) {
         <div className="flex flex-row gap-4">
           <h2 className="text-3xl font-bold text-gray-900">{recipe.title}</h2>
           <div className="flex flex-row gap-2">
-          {recipe.tags.map((tag) => (
-            <p key={tag} className="text-md bg-white px-2 py-1 rounded text-center">
-              {tag}
+          {recipe.recipeTag.map((t) => (
+            <p key={t.tag.name} className="text-md bg-white px-2 py-1 rounded text-center">
+              {t.tag.name}
             </p>
           ))}
         </div>
         </div>
-        <p> By {recipe.authorName}</p>
+        <p> By {recipe.author.name}</p>
       </div>
       {recipe.flavourText && (
         <p className="mt-2 text-md text-gray-600 italic leading-relaxed">

@@ -12,19 +12,19 @@ export function RecipeCard({ recipe }: { recipe: RecipeDTO }) {
             <h1 className="text-2xl text-black font-bold">{recipe.title}</h1>
           </Link>
           <div className="flex flex-row gap-2">
-            {recipe.tags.map((tag) => (
+            {recipe.recipeTag.map((t) => (
               <p
-                key={tag}
+                key={t.tag.name}
                 className="text-md bg-blue-400 px-2 py-1 rounded text-center"
               >
-                {tag}
+                {t.tag.name}
               </p>
             ))}
           </div>
         </div>
 
         <div className="mt-2 text-m text-gray-600 flex items-center space-x-4">
-          {recipe.authorName && <span>by {recipe.authorName}</span>}
+          {recipe.author.name && <span>by {recipe.author.name}</span>}
           {recipe.added && (
             <span>{new Date(recipe.added).toLocaleDateString()}</span>
           )}

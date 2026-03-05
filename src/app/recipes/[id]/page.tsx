@@ -23,8 +23,8 @@ export default async function RecipePage({
       <RecipeIcon />
       <RecipeHeader recipe={recipe} />
       <div className="flex flex-row gap-6">
-        <RecipeIngredients ingredients={recipe.ingredients} />
-        <RecipeSteps steps={recipe.steps} />
+        <RecipeIngredients ingredients={recipe.recipeIngredient} />
+        <RecipeSteps steps={recipe.step} />
       </div>
     </div>
   );

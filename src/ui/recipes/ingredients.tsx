@@ -1,6 +1,6 @@
-import { Ingredient } from "@/lib/definitions";
+import { IngredientDTO } from "@/lib/definitions";
 
-export default function RecipeIngredients({ingredients} : {ingredients: Ingredient[]}) {
+export default function RecipeIngredients({ingredients} : {ingredients: IngredientDTO[]}) {
   return (
     <div>
       <h3 className="text-xl font-bold mb-6">Ingredients</h3>
@@ -9,10 +9,10 @@ export default function RecipeIngredients({ingredients} : {ingredients: Ingredie
         return (
           <div key={index} className="contents group">
             <span className="text-right font-medium text-gray-800">
-              {ing.name}
+              {ing.ingredient.name}
             </span>
             <span className="text-gray-500">
-              {ing.quantity}
+              {ing.quantity.toString()}
             </span>
             <span className="text-gray-800">
               {ing.unit}
