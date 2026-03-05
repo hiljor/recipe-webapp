@@ -41,8 +41,7 @@ model Recipe {
   author           User               @relation(fields: [authorId], references: [id], onDelete: Cascade)
   recipeIngredient RecipeIngredient[]
   step             Step[]
-  tag              Tag[]
-  recipeTags       RecipeTag[]
+  recipeTag       RecipeTag[]
 
   @@index([authorId])
   @@map("Recipe")
@@ -62,9 +61,6 @@ model Step {
 model Tag {
   id   Int    @id @default(autoincrement())
   name String @unique
-
-  recipe     Recipe?     @relation(fields: [recipeId], references: [id])
-  recipeId   Int?
   recipeTags RecipeTag[]
 }
 
