@@ -1,18 +1,20 @@
+"use server"
 import prisma from "@/prisma/connection";
 import { RecipeSchema } from "../definitions";
 import { z } from "zod";
-import { auth } from "./auth";
-import { headers } from "next/headers";
 
+// 1. Define a consistent State type
 export type State = {
   errors?: {
-    title?: string[];
-    servings?: string[];
-    time?: string[];
-    image?: string[];
-    ingredientsRaw?: string[]; // Matches the name in the textarea
-    stepsRaw?: string[];
-    message?: string | null;
+    userId?: string[] | undefined;
+    title?: string[] | undefined;
+    servings?: string[] | undefined;
+    time?: string[] | undefined;
+    ingredients?: string[] | undefined;
+    steps?: string[] | undefined;
+    tags?: string[] | undefined;
+    flavourText?: string[] | undefined;
+    image?: string[] | undefined;
   };
   message?: string | null;
 };
@@ -24,23 +26,26 @@ export async function createRecipe(prevState: State, formData: FormData) {
   // 2. If validation fails, return errors early
   if (!validatedFields.success) {
     return {
-      errors: z.flattenError(validatedFields.error),
-      message: 'Missing Fields. Failed to create recipe.',
+      // using flatten despite deprecation 
+      // because the nextjs guide uses it
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Missing Fields. Failed to create recipe.",
     };
   }
 
-  // 3. Get current user session
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (!session?.user?.id) {
-    return { message: 'Unauthorized: Must be logged in to create a recipe.' };
-  }
-
-  // 4. If successful, proceed to DB
+  // 3. If successful, proceed to DB
   try {
-    const { title, flavourText, servings, time, image, ingredients, steps, tags } = validatedFields.data;
+    const {
+      userId,
+      title,
+      flavourText,
+      servings,
+      time,
+      image,
+      ingredients,
+      steps,
+      tags,
+    } = validatedFields.data;
 
     // Handle image upload (optional)
     let imageUrl: string | null = null;
@@ -50,6 +55,33 @@ export async function createRecipe(prevState: State, formData: FormData) {
       imageUrl = null;
     }
 
+    // insert recipes in advance
+    const ingredientRecords = await Promise.all(
+      ingredients.map((ing) => {
+        const ingName = ing.name.toLowerCase();
+        return prisma.ingredient.upsert({
+          where: { name: ingName },
+          update: {},
+          create: { name: ingName },
+        });
+      }),
+    );
+    const dbIngredients = ingredients.map((ing, index) => ({
+      ...ing,
+      id: ingredientRecords[index].id,
+    }));
+
+    const tagRecords = await Promise.all(
+      tags.map((tag) => {
+        const tagName = tag.toLowerCase();
+        return prisma.tag.upsert({
+          where: { name: tagName },
+          update: {},
+          create: { name: tagName },
+        });
+      }),
+    );
+
     const now = new Date();
 
     // Create recipe with nested relations
@@ -58,16 +90,16 @@ export async function createRecipe(prevState: State, formData: FormData) {
         title,
         flavourText: flavourText || null,
         servings,
-        length: time as any, // Maps to RecipeLength enum
+        length: time as any,
         imageUrl,
         added: now,
         updated: now,
-        authorId: session.user.id,
+        authorId: userId,
         // Create ingredients
         recipeIngredient: {
           createMany: {
-            data: ingredients.map((ing, index) => ({
-              ingredientId: ing.id || undefined, // Assume ingredient.id exists, else handle lookup
+            data: dbIngredients.map((ing, index) => ({
+              ingredientId: ing.id,
               quantity: ing.amount,
               unit: ing.unit || null,
               pos: index,
@@ -89,8 +121,8 @@ export async function createRecipe(prevState: State, formData: FormData) {
         // Create tags
         recipeTag: {
           createMany: {
-            data: tags.map((tagName) => ({
-              tagId: undefined, // TODO: Lookup or create tag by name
+            data: tagRecords.map((tag) => ({
+              tagId: tag.id,
             })),
             skipDuplicates: true,
           },
@@ -104,9 +136,9 @@ export async function createRecipe(prevState: State, formData: FormData) {
       },
     });
 
-    return { message: 'Recipe created successfully!' };
+    return { message: "Recipe created successfully!" };
   } catch (error) {
-    console.error('Recipe creation error:', error);
-    return { message: 'Database Error: Failed to Create Recipe.' };
+    console.error("Recipe creation error:", error);
+    return { message: "Database Error: Failed to Create Recipe." };
   }
 }

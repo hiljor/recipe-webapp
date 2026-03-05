@@ -59,7 +59,9 @@ const StepSchema = z.object({
   instruction: z
     .string()
     .min(1, "Step instruction must be a bit more detailed"),
-  type: 
+  type: z.enum(['step', 'tip'], {
+    message: "Please select a valid step type",
+  }),
 });
 
 export const RecipeSchema = z.object({
