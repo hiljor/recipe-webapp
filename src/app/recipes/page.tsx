@@ -1,8 +1,8 @@
-import { getAllRecipes } from "@/lib/data"
+import { fetchAllRecipes } from "@/lib/data/recipe"
 import { RecipeCard } from "@/ui/recipes/card"
 
 export default async function RecipesPage() {
-  const recipes = await getAllRecipes();
+  const recipes = await fetchAllRecipes();
 
   return (
     <div className="flex grow flex-col justify-between rounded-xl p-4">
@@ -11,7 +11,6 @@ export default async function RecipesPage() {
           <RecipeCard recipe={recipe} key={recipe.id} />
         ))}
       </div>}
-      
     </div>
   );
 }

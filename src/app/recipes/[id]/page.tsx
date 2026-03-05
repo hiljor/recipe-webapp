@@ -1,4 +1,4 @@
-import { getRecipeById } from "@/lib/data";
+import { fetchRecipeById } from "@/lib/data/recipe";
 import RecipeHeader from "@/ui/recipes/header";
 import RecipeIcon from "@/ui/recipes/icon";
 import RecipeIngredients from "@/ui/recipes/ingredients";
@@ -12,7 +12,7 @@ export default async function RecipePage({
 }) {
   const { id } = await params;
 
-  const recipe = await getRecipeById(parseInt(id));
+  const recipe = await fetchRecipeById(parseInt(id));
 
   if (!recipe) {
     notFound();
