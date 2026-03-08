@@ -20,8 +20,40 @@ export type State = {
 };
 
 export async function createRecipe(prevState: State, formData: FormData) {
-  // 1. Validate fields using Zod
-  const validatedFields = RecipeSchema.safeParse(formData);
+
+  const ingredientIds = Array.from(formData.keys())
+    .filter((key) => key.startsWith("ingredient-name-"))
+    .map((key) => key.replace("ingredient-name-", ""));
+
+  const stepIds = Array.from(formData.keys())
+    .filter((key) => key.startsWith("step-instruction-"))
+    .map((key) => key.replace("step-instruction-", ""));
+
+  // 2. Map those IDs into the nested arrays Zod expects
+  const dataToValidate = {
+    userId: formData.get("userId"), // Replace with actual auth logic
+    title: formData.get("title"),
+    flavourText: formData.get("flavourText") || null,
+    servings: formData.get("servings"),
+    time: formData.get("time"),
+    image: formData.get("image") instanceof File ? formData.get("image") : undefined,
+    
+    ingredients: ingredientIds.map((id) => ({
+      name: formData.get(`ingredient-name-${id}`),
+      amount: formData.get(`ingredient-amount-${id}`),
+      unit: formData.get(`ingredient-unit-${id}`),
+    })),
+
+    steps: stepIds.map((id) => ({
+      instruction: formData.get(`step-instruction-${id}`),
+      type: formData.get(`step-type-${id}`), // "tip" if checked, "step" if not
+    })),
+    
+    tags: [], // Handle tags similarly if they are dynamic
+  };
+
+  // 3. Validate
+  const validatedFields = RecipeSchema.safeParse(dataToValidate);
 
   // 2. If validation fails, return errors early
   if (!validatedFields.success) {

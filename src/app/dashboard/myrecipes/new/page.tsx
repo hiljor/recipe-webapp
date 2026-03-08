@@ -1,9 +1,23 @@
+import prisma from "@/prisma/connection";
 import CreateRecipeForm from "@/ui/dashboard/forms";
 
-export default function Page() {
+export default async function Page() {
+
+  const dbTags = await prisma.tag.findMany({
+    select: {
+      name: true,
+    }
+  });
+
+  const tags = dbTags.map((tag) => {
+    return tag.name;
+  });
+
+
+
   return (
     <div>
-      < CreateRecipeForm />
+      < CreateRecipeForm tags={tags} />
     </div>
   )
 }
