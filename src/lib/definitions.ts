@@ -27,6 +27,11 @@ export const RECIPE_INCLUDE = {
     },
   },
   step: {
+    select: {
+      type: true,
+      text: true,
+      pos: true
+    },
     orderBy: { pos: "asc" as const },
   },
   recipeIngredient: {
