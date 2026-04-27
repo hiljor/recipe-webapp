@@ -1,4 +1,4 @@
-# Recipe web app
+# DEPRECATED: Recipe web app
 
 A web app for viewing recipes among friends/family. Built with Nextjs, Prisma and Vercel.
 
